@@ -1,0 +1,7 @@
+.idea/
+.ipynb_checkpoints/
+Data/
+*/__pycache__/
+02Dec08-cell_002.pkl
+MembranePotential.pkl
+Intro_NumpyData.pkl
