@@ -4,6 +4,10 @@ python script for the Rock-Paper-Scissor game
 
 import random
 
+
+# allowed choices
+allowed_vals = ['Rock', 'Paper', 'Scissor']
+
 # to run the Rock-Paper-Scissor game (player vs. computer):
 # we want to ask if the user want to play multiple game
 # if we know how to play one game, then play multiple game is not a problem
@@ -63,10 +67,22 @@ def compare_choices(player_choice, computer_choice):
     :return: string, in ('d', 'w', 'l')
     """
     # ToDO
-    pass
-
-
-allowed_vals = ['Rock', 'Paper', 'Scissor']
+    # choices have to be in ('Rock', 'Paper', 'Scissor')
+    # we can use a lot of if ... elif to do the comparison
+    # or, we can set a value to each choice
+    choice_values = {'Rock': 0, 'Paper': 1, 'Scissor': 2}
+    # in this case, take the difference between the values of the two choice, and the difference is periodic
+    diff_val = choice_values[player_choice] - choice_values[computer_choice]
+    # how to map to draw, win, loss from the diff_val?
+    # 0 is draw
+    if diff_val == 0:
+        return 'd'
+    # -1 and 2 is loss, or in general diff_val % 3 == 2 is loss
+    elif diff_val % 3 == 2:
+        return 'l'
+    # 1 and -2 is win, or diff_val % 3 == 1 is win
+    elif diff_val % 3 == 1:
+        return 'w'
 
 
 def play_one_game(allowed_vals):

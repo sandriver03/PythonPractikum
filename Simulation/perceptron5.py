@@ -31,6 +31,7 @@ transformation = transforms.Compose([
 				   ])
 
 # Setup data loader
+# data is the hand written digits images
 train_loader = torch.utils.data.DataLoader(
 	datasets.MNIST('.', train=True, download=True, transform=transformation),
 	batch_size=batch_size

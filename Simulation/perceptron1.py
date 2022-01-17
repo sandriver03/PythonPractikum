@@ -3,6 +3,7 @@ import numpy as np
 
 
 # Perceptron using manual gradient descent algorithm
+# what is the connections of this perceptron look like?
 # Training data initialization
 x_data = [1.0, 2.0, 3.0]
 y_data = [2.0, 4.0, 6.0]
@@ -41,21 +42,29 @@ print(f'predict (before training): {forward(w, test_data)}')
 for epoch in range(20):
     for x, y in zip(x_data, y_data):
         # 1. forward
-        y_hat = forward(x)
+        y_hat = forward(w, x)
         # 2. loss
         l = loss(y_hat, y)
         # 3. backward
-        grad = backward(x, y)
+        grad = backward(x, y, w)
         # 4. update: calculate the new w
+        # TODO
 
     plt.figure(1)
-    plt.plot(epoch, np.sum(l), 'ro')
+    plt.plot(epoch, l, 'ro')
 
     plt.figure(2)
-    plt.plot(np.mean(w), np.sum(l), 'bo')
-    print(f'grad: {round(grad,4)}, \t loss: {round(l,4)}')
+    plt.plot(np.mean(w), l, 'bo')
+    print(f'grad: {round(grad, 4)}, \t loss: {round(l, 4)}')
 
 
 # After training
 print(f'predict (after training): {forward(w, test_data)}')
 plt.show()
+
+
+# we briefly talked about the biasing unit. below demonstrates its functions
+# this problem below cannot be accurately solved without the biasing unit
+# x_data = [1., 2., 3.,]
+# y_data = [2.5, 4.5, 6.5]
+# now, add the biasing unit and try again

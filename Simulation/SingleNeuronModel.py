@@ -390,8 +390,8 @@ class synapticInput():
         self.dt = dt
         # generate spikes based on time step
         n_bins = int(duration/self.dt)
-        p = np.random.rand(n_bins) * 0.001
-        self.spike_times = start_time + np.where(p < self.dt*firing_rate)[0] * self.dt
+        p = np.random.rand(n_bins)
+        self.spike_times = start_time + np.where(p < self.dt*firing_rate * .001)[0] * self.dt
 
 
 # TODO:
@@ -404,9 +404,9 @@ class synapticInput():
 # 5. do the neuron parameters affect the value of the stimulation threshold? which neuron parameters affect the
 #    stimulation threshold? how do these neuron parameters affect the stimulation threshold?
 # 6. now lets add some noise in the system. in each neuron model, there is a 'noise_amp' parameter. now change this
-#    parameter to non-zero (the amplitude of the noise should be at least in range of your stimulus). repeat 2-5. how
-#    should you measure the threshold current in this case? and how adding system noise affect the threshold current
-#    value?
+#    parameter to non-zero (try to use a value that causes observable fluctuations, but not spontaneous spikes. A value
+#    in range of [1, 100] seems working well for the LIF model). repeat 2-5. how should you measure the threshold
+#    current in this case? and how adding system noise affect the threshold current value?
 # 7. coincidence detector simulation:
     # a. connect the neuron to 2 synapses. with the threshold value you found in question 3, set the strength of each
     #    synapse to 75% of the threshold. run the simulation with each synapse having only 1 spike. now, modified the
