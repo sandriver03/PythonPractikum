@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # load data from pickle file
-with open('MembranePotential.pkl', 'rb') as fh:
+with open('Data\\MembranePotential.pkl', 'rb') as fh:
     data, sampling_freq = pickle.load(fh)
 
 # plot the membrane potential from one trial
@@ -29,7 +29,19 @@ plt.show()
 # sample represent. In this dataset, sampling frequency is provided as sampling_freq. Its unit is Hz
 
 
-# ToDo: can you write a function to extract spike time in Vm recordings, as those provided in data?
+# ToDo: can you write a function to extract spike time in a single trial of Vm recordings, as those provided in data?
+# now you should be able to analyze individual trial data
+# perform the analysis on all the trials, and get the results from all the trials
+
+
+# we can look at the shape of individual spikes. can you also calculate the width and amplitude for each individual
+# spikes?
+# after you are done with the calculation, can you also compare the (average) spike width and spike amplitude in
+# different trials?
+# also compare the inter-spike intervals in different trials. the inter-spike interval is the time difference between
+# consecutive spikes (i.e. take a 'diff' of the spike times array)
+# what can you see, and can you explain what you see?
+# try to plot your results. it is much easier to see patterns when you plot them out.
 # TODO: can you also try to calculate spike width and spike amplitude, and inter-spike interval? try to plot them as
 #  well
 
