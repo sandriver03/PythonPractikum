@@ -32,6 +32,7 @@ plt.show()
 # ToDo: can you write a function to extract spike time in a single trial of Vm recordings, as those provided in data?
 # now you should be able to analyze individual trial data
 # perform the analysis on all the trials, and get the results from all the trials
+# what do you see from the results?
 
 
 # we can look at the shape of individual spikes. can you also calculate the width and amplitude for each individual

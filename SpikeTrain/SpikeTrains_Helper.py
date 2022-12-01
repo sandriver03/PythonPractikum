@@ -49,3 +49,78 @@ def Helper_spt2psth(spt, bin_size, bin_range, axis=0):
         return spt_binned, t0
     else:
         raise ValueError('data dimension cannot be processed')
+
+
+# function to find spikes in one trial
+def findspikes(Vm0, thresh=-0.03, sampling_freq=20000):
+    """
+    find spike times in a whole cell recording
+    :param vm: membrane potential traces
+    :param thresh: threshold to detect spikes
+    :param sampling_freq: sampling frequency of vm
+    :return: numpy array of spike times, in second
+    """
+    # find regions contain spike
+    Vm0_th_idx = np.where(Vm0 > thresh)[0]  # indexes above threshold
+    Vm0_th_val = Vm0[Vm0_th_idx]  # values above threshold
+    # get indexes of the regions
+    spk_region = []
+    Vm0_th_idx_diff = np.diff(Vm0_th_idx)
+    idx_start = 0
+    # the last spike is missing from the code
+    for i in np.where(Vm0_th_idx_diff > 1)[0]:
+        spk_region.append(tuple(Vm0_th_idx[idx_start:i + 1]))
+        idx_start = i + 1
+    # append the last spike
+    spk_region.append(Vm0_th_idx[idx_start:])
+
+    # spike times
+    spt0_idx = []
+    spt0 = np.array([])
+    if Vm0_th_idx.size:
+        spt0_idx = [i[0] for i in spk_region]
+        spt0 = np.array(spt0_idx) / sampling_freq
+    return spt0, spt0_idx, spk_region
+
+
+# function to find spikes in one trial
+def findspikes_v2(Vm0, thresh=-0.03, sampling_freq=20000):
+    """
+    a better, easier to understand version
+    find spike times in a whole cell recording
+    :param vm: membrane potential traces
+    :param thresh: threshold to detect spikes
+    :param sampling_freq: sampling frequency of vm
+    :return: numpy array of spike times, in second
+    """
+    # find regions contain spike
+    Vm0_th_idx = np.where(Vm0 > thresh)[0]  # indexes above threshold
+    # now we just need to loop over those index, comparing consecutive values to see if the difference is larger than 1
+    # compare current and previous
+    pre_pos = 0
+    # use list to hold the result
+    spk_region = []
+    # another list to hold indexes of current spike regions
+    # the very first index obviously belongs to the first spike
+    curr_spk = [Vm0_th_idx[pre_pos]]
+    for curr_pos in range(1, len(Vm0_th_idx)):
+        # check the difference of the two index values
+        if Vm0_th_idx[curr_pos] - Vm0_th_idx[pre_pos] > 1:
+            # start of a new spike
+            # we have finished with current spike, append it into result and start a new one
+            spk_region.append(curr_spk.copy())
+            curr_spk = []
+        else:
+            # index pointed by curr_pos belong to the same spike
+            curr_spk.append(Vm0_th_idx[curr_pos])
+        # update pre_pos
+        pre_pos = curr_pos
+
+    # spike times
+    spt0_idx = []
+    spt0 = np.array([])
+    if Vm0_th_idx.size:
+        spt0_idx = [i[0] for i in spk_region]
+        spt0 = np.array(spt0_idx) / sampling_freq
+    return spt0, spt0_idx, spk_region
+

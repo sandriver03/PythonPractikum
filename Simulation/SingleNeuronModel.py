@@ -144,6 +144,17 @@ class LIFNeuron(Neuron):
         self.V_reset = V_reset
         self.V = El  # set initial membrane potential to the resting membrane potential
 
+    def __str__(self):
+        return 'LIF neuron with parameters: \n ' \
+               '\t Cm: {} \n ' \
+               '\t El: {} \n ' \
+               '\t gl: {} \n ' \
+               '\t th: {} \n ' \
+               '\t reset: {} \n' \
+               'connected inputs: {} \n' \
+               'simulation time step: {}'.format(self.Cm, self.El, self.gl, self.th, self.V_reset,
+                                                 self.inputs, self.dt)
+
     def update(self, I):
         # detect spike
         # note: at this point we are working on V from last update
@@ -212,6 +223,19 @@ class HHNeuron(Neuron):
         self.m_all = None
         self.n_all = None
         self.h_all = None
+
+    def __str__(self):
+        return 'HH neuron with parameters: \n ' \
+               '\t Cm: {} \n ' \
+               '\t El: {} \n ' \
+               '\t gl: {} \n ' \
+               '\t gNa: {} \n ' \
+               '\t ENa: {} \n' \
+               '\t gK: {} \n' \
+               '\t EK: {} \n' \
+               'connected inputs: {} \n' \
+               'simulation time step: {}'.format(self.Cm, self.El, self.gl, self.gNa, self.ENa, self.gK, self.EK,
+                                                 self.inputs, self.dt)
 
     def update(self, I):
         # first update m, n, h
@@ -332,6 +356,13 @@ class constCurrent():
         self.amplitude = amplitude
         self.dt = None
 
+    def __str__(self):
+        return 'constant current injection with parameters: \n ' \
+               '\t start time: {} ms \n ' \
+               '\t duration: {} ms \n ' \
+               '\t amplitude (unit is ambiguous): {} \n ' \
+               .format(self.start, self.duration, self.amplitude)
+
     def output(self, t, dt=0.1):
         """"
         get the output of the source at time t
@@ -364,6 +395,12 @@ class synapticInput():
         self.tau = tau
         self.t = 0   # current time
 
+    def __str__(self):
+        return 'synaptic input with parameters: \n ' \
+               '\t spike times: {} ms \n ' \
+               '\t time constant: {} ms \n ' \
+               .format(self.spike_times, self.tau)
+
     def output(self, t, dt=0.1):
         """
         get the synaptic activity at time t
@@ -394,10 +431,38 @@ class synapticInput():
         self.spike_times = start_time + np.where(p < self.dt*firing_rate * .001)[0] * self.dt
 
 
+if __name__ == '__main__':
+    # create a LIF neuron using default parameters
+    lif1 = LIFNeuron()
+    # you can check the individual parameters of the neuron
+    print(lif1)
+    # run simulation, by default for 500ms. you can pass the simulation length into the run method
+    lif1.run()
+    # the simulated membrane potential will be saved in lif1.V_all
+    # you can check the result. right now it is not so interesting since we did not stimulate the neuron
+    # now let's give some stimulus to the neuron. there are two types of stimulation we can use: a constant current
+    # injection and synaptic input
+    # first try with constant current injection
+    # it has some default parameters, but you can always change those parameters
+    cc = constCurrent()
+    # you can check the parameters
+    print(cc)
+    # now 'connect' the input to the neuron so we can stimulate it
+    lif1.connect(cc)
+    # now we can simulate the neuron with a constant current injection. however, since we already run the simulation for
+    # the neuron before, in order to re-run it again we need to reset it first
+    lif1.reset()
+    # now simulate again
+    lif1.run()
+    # check the result
+
+    # the HH model works in a very similar way
+
+
 # TODO:
 # 1. familiar yourself with working with objects
 # 2. choose either the LIF neuron or HH neuron, find the threshold constant current (the minimum constant current that
-        # make the neuron spiking)
+# make the neuron spiking)
 # 3. do the same, this time use the synapticInput
 # 4. let's say, we want the precision of the stimulation threshold to be 1 digit after the integer, i.e. should be in
 #    form of 19.5 or 4.1 and so on. find the thresholds in this precision.
