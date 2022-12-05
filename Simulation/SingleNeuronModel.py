@@ -151,9 +151,9 @@ class LIFNeuron(Neuron):
                '\t gl: {} \n ' \
                '\t th: {} \n ' \
                '\t reset: {} \n' \
-               'connected inputs: {} \n' \
+               'connected inputs: {} with weights: {}\n' \
                'simulation time step: {}'.format(self.Cm, self.El, self.gl, self.th, self.V_reset,
-                                                 self.inputs, self.dt)
+                                                 self.inputs, self.weights, self.dt)
 
     def update(self, I):
         # detect spike
@@ -233,9 +233,9 @@ class HHNeuron(Neuron):
                '\t ENa: {} \n' \
                '\t gK: {} \n' \
                '\t EK: {} \n' \
-               'connected inputs: {} \n' \
+               'connected inputs: {} with weights: {}\n' \
                'simulation time step: {}'.format(self.Cm, self.El, self.gl, self.gNa, self.ENa, self.gK, self.EK,
-                                                 self.inputs, self.dt)
+                                                 self.inputs, self.weights, self.dt)
 
     def update(self, I):
         # first update m, n, h
