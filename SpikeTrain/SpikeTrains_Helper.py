@@ -58,7 +58,8 @@ def findspikes(Vm0, thresh=-0.03, sampling_freq=20000):
     :param vm: membrane potential traces
     :param thresh: threshold to detect spikes
     :param sampling_freq: sampling frequency of vm
-    :return: numpy array of spike times, in second
+    :return: numpy array of spike times, in second; list of indexes for the 1st data points in each spike; list of
+        tuples for indexes of each spike region
     """
     # find regions contain spike
     Vm0_th_idx = np.where(Vm0 > thresh)[0]  # indexes above threshold
@@ -88,10 +89,11 @@ def findspikes_v2(Vm0, thresh=-0.03, sampling_freq=20000):
     """
     a better, easier to understand version
     find spike times in a whole cell recording
-    :param vm: membrane potential traces
+    :param vm: membrane potential traces in one trial
     :param thresh: threshold to detect spikes
     :param sampling_freq: sampling frequency of vm
-    :return: numpy array of spike times, in second
+    :return: numpy array of spike times, in second; list of indexes for the 1st data points in each spike; list of
+        tuples for indexes of each spike region
     """
     # find regions contain spike
     Vm0_th_idx = np.where(Vm0 > thresh)[0]  # indexes above threshold
@@ -100,6 +102,9 @@ def findspikes_v2(Vm0, thresh=-0.03, sampling_freq=20000):
     pre_pos = 0
     # use list to hold the result
     spk_region = []
+    # if nothing found, we can directly return
+    if len(Vm0_th_idx) == 0:
+        return [], [], spk_region
     # another list to hold indexes of current spike regions
     # the very first index obviously belongs to the first spike
     curr_spk = [Vm0_th_idx[pre_pos]]
@@ -115,6 +120,8 @@ def findspikes_v2(Vm0, thresh=-0.03, sampling_freq=20000):
             curr_spk.append(Vm0_th_idx[curr_pos])
         # update pre_pos
         pre_pos = curr_pos
+    # append last spike
+    spk_region.append(curr_spk.copy())
 
     # spike times
     spt0_idx = []
