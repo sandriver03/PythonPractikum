@@ -46,7 +46,6 @@ class Neuron():
         """
         if isinstance(inputs, (constCurrent, synapticInput)):
             inputs = [inputs]
-        self.inputs = inputs
         if not isinstance(weights, (list, tuple, np.ndarray)):  # in this case weights should be a number
             weights = weights * np.ones(len(inputs))
         elif len(weights) != len(inputs):
@@ -55,6 +54,7 @@ class Neuron():
             delays = delays * np.ones(len(inputs))
         elif len(delays) != len(inputs):
             raise ValueError('size of weights and inputs must match')
+        self.inputs = inputs
         self.weights = weights
         self.delays = delays
 
@@ -456,7 +456,16 @@ if __name__ == '__main__':
     lif1.run()
     # check the result
 
-    # the HH model works in a very similar way
+    # the HH model works in a very similar way, though you need to try inputs with different amplitude
+
+    # we can also use synaptic inputs, i.e. simulate connecting synapses to the neuron
+    syn1 = synapticInput()
+    print(syn1)
+    # synaptic inputs are defined by spike times of the presynaptic neuron, as well as the time constant of the synapse
+    # when you make the connection, you can specify the strength of the synaptic connection
+    hh1 = HHNeuron()
+    hh1.connect(syn1, 2)  # by default the weight is 1, here we set it to 2
+    hh1.run()
 
 
 # TODO:
