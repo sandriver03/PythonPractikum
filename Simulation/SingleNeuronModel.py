@@ -5,6 +5,7 @@ Leaky-integrate-and-fire model and Hodgkin-Huxley model
 import numpy as np
 from scipy.integrate import odeint
 import matplotlib.pyplot as plt
+from collections import Sized
 
 
 class Neuron():
@@ -58,6 +59,48 @@ class Neuron():
         self.weights = weights
         self.delays = delays
 
+    def adjust_inputs(self, new_weights, new_delays=0, input_to_adj=None):
+        """
+        adjust the weights for the inputs
+        :param new_weights: list of same size as inputs; weight (strength) of each input; or a single number
+        :param new_delays: list of same size as inputs; delays (in ms) of each input; or a single number
+        :param input_to_adj: list of same size as inputs; delays (in ms) of each input; or a single number
+        :return: None
+        """
+        if not self.inputs:
+            raise ValueError('no inputs to the neuron. the weights/delays cannot be set')
+        if input_to_adj is None:
+            input_to_adj = self.inputs
+            adj_idx = list(range(len(input_to_adj)))
+        else:
+            if not isinstance(input_to_adj, Sized):
+                input_to_adj = [input_to_adj]
+            # convert any input_to_adj into the indexes in the inputs array
+            adj_idx = []
+            for i in input_to_adj:
+                try:
+                    adj_idx.append(self.inputs.index(i))
+                except ValueError:
+                    # assume it is an index itself
+                    try:
+                        test = self.inputs[i]
+                        adj_idx.append(i)
+                    except IndexError:
+                        raise ValueError('the inputs to be adjusted: {} are not valid'.format(input_to_adj))
+
+        # now use adj_idx to adjust self.weights
+        if not isinstance(new_weights, (list, tuple, np.ndarray)):  # in this case weights should be a number
+            new_weights = new_weights * np.ones(len(adj_idx))
+        elif len(new_weights) != len(adj_idx):
+            raise ValueError('size of weights and inputs must match')
+        if not isinstance(new_delays, (list, tuple, np.ndarray)):  # in this case delays should be a number
+            new_delays = new_delays * np.ones(len(adj_idx))
+        elif len(new_delays) != len(adj_idx):
+            raise ValueError('size of weights and inputs must match')
+        for idx, w, d in zip(adj_idx, new_weights, new_delays):
+            self.weights[idx] = w
+            self.delays[idx] = d
+
     def update(self, I):
         """
         update the model for one time step
@@ -75,7 +118,11 @@ class Neuron():
         activity = np.array([stim.output(t, self.dt) for stim in self.inputs])
         # add noise term
         if self.noise_amp:
-            activity = activity + self.noise_amp * np.random.randn(*activity.shape)
+            noise = self.noise_amp * np.random.randn(1)
+            activity = activity + noise
+            if not activity.size:
+                activity = noise
+                return activity
         return np.sum(activity * self.weights)
 
     def initialize(self, duration):
