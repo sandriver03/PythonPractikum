@@ -39,7 +39,7 @@ class Neuron():
 
     def connect(self, inputs, weights=1, delays=0):
         """
-        connect to the cell to different inputs
+        connect to the cell to different inputs. overwrite existing ones
         :param inputs: list of object from constCurrent or synapticInput
         :param weights: list of same size as inputs; weight (strength) of each input
         :param delays: list of same size as inputs; synaptic delay of each input in millisecond
@@ -242,7 +242,7 @@ class HHNeuron(Neuron):
     (see Destexhe and Paré 1999), where gM = 0.5 mS/cm2, and gK is the same as above
     """
 
-    def __init__(self, dt=0.01, Cm=1.0, gl=0.05, El=-70.0, gNa=60.0, ENa=50.0, gK=10.0, EK=-85.0):
+    def __init__(self, dt=0.01, Cm=1.0, gl=0.05, El=-70.0, gNa=60.0, ENa=50.0, gK=10.0, EK=-85.0, **kwargs):
         """
         :param dt: simulation time step, default is 0.01 ms. Note: larger time steps may cause numerical instability
         :param Cm: membrane capacitance, default is 1 microF/cm2
@@ -253,7 +253,7 @@ class HHNeuron(Neuron):
         :param gK: maximum potassium conductance, 10 mS/cm2
         :param EK: potassium equilibrium potential, -90 mV
         """
-        Neuron.__init__(self, 'HH', dt)
+        Neuron.__init__(self, 'HH', dt, **kwargs)
         self.Cm = Cm
         self.gl = gl
         self.El = El
