@@ -61,17 +61,22 @@ tk = nltk.pad_sequence(tk, n=2, pad_left=True, left_pad_symbol='<s>',
 # tk is an iterator, to use it multiple time convert it into a list
 tk = list(tk)
 # calculate ngrams and corresponding dictionaries
-unigram = nltk.ngrams(tk, 1)
-uni_dict = nltk.FreqDist(unigram)
-trigram = nltk.ngrams(tk, 3)
-tri_dict = nltk.FreqDist(trigram)
+unigram_onesent = nltk.ngrams(tk, 1)
+uni_dict_onesent = nltk.FreqDist(unigram_onesent)
+trigram_onesent = nltk.ngrams(tk, 3)
+tri_dict_onesent = nltk.FreqDist(trigram_onesent)
 
 # tokenize the text, sentence by sentence
 tokenized_text = [tokenize_sentence(sent)
                   for sent in nltk.sent_tokenize(txt)]
 
-# build ngrams
-# TODO
+# build ngram dicts for all the sentences
+unigram = nltk.ngrams(sum(tokenized_text, []), 1)
+uni_dict = nltk.FreqDist(unigram)
+bigram = nltk.ngrams(sum(tokenized_text, []), 2)
+bi_dict = nltk.FreqDist(bigram)
+trigram = nltk.ngrams(sum(tokenized_text, []), 3)
+tri_dict = nltk.FreqDist(trigram)
 # or, just use a pipeline in nltk: nltk.lm.preprocessing.padded_everygram_pipeline
 # the everygram is basically all the 'gram' models up to and including n
 gram_order = 3
