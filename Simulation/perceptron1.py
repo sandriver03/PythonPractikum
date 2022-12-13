@@ -35,32 +35,32 @@ def backward(xs, ys, w_vec):
     raise NotImplementedError
 
 
-# Before training
-print(f'predict (before training): {forward(w, test_data)}')
+if __name__ == '__main__':
+    # Before training
+    print(f'predict (before training): {forward(w, test_data)}')
 
-# Training loop
-for epoch in range(20):
-    for x, y in zip(x_data, y_data):
-        # 1. forward
-        y_hat = forward(w, x)
-        # 2. loss
-        l = loss(y_hat, y)
-        # 3. backward
-        grad = backward(x, y, w)
-        # 4. update: calculate the new w
-        # TODO
+    # Training loop
+    for epoch in range(20):
+        for x, y in zip(x_data, y_data):
+            # 1. forward
+            y_hat = forward(w, x)
+            # 2. loss
+            l = loss(y_hat, y)
+            # 3. backward
+            grad = backward(x, y, w)
+            # 4. update: set the new value for w
+            # TODO
 
-    plt.figure(1)
-    plt.plot(epoch, l, 'ro')
+        plt.figure(1)
+        plt.plot(epoch, l, 'ro')
 
-    plt.figure(2)
-    plt.plot(np.mean(w), l, 'bo')
-    print(f'grad: {round(grad, 4)}, \t loss: {round(l, 4)}')
+        plt.figure(2)
+        plt.plot(np.mean(w), l, 'bo')
+        print(f'grad: {round(grad, 4)}, \t loss: {round(l, 4)}')
 
-
-# After training
-print(f'predict (after training): {forward(w, test_data)}')
-plt.show()
+    # After training
+    print(f'predict (after training): {forward(w, test_data)}')
+    plt.show()
 
 
 # we briefly talked about the biasing unit. below demonstrates its functions

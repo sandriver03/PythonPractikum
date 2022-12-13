@@ -15,7 +15,9 @@ y = y.astype(int)*2-1  # labels are -1 and 1
 
 
 # training in each trial will be the same as we saw last time, with 4 steps
-# let's write everything in array or matrix form since it is very powerful (faster and better scalable)
+# you can choose to do the training sample by sample (as in perceptron1), or by entire training set in one step
+# if you choose the latter: let's write everything in array or matrix form since it is very powerful (faster and better
+# scalable). remember in this case you have multi-dimensional inputs
 # calculate perceptron output
 # remember we are doing classification now. check the value of y. what is a good activation function to use?
 def forward(x_vec, weights):
@@ -120,6 +122,8 @@ def prediction_accuracy(x_vec, y_vec, weights):
 # now, train the model with the training set
 # remember first choose a learning rate
 # randomly choose some initial weights
+# TODO
+# now train the model. you can use perceptron1 as an example
 # TODO
 
 # check the performance of the trained model with the validation set
